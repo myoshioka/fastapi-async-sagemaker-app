@@ -1,36 +1,51 @@
-from fastapi import FastAPI
-from time import sleep
-import aiohttp
+from fastapi import FastAPI, HTTPException
 import uvicorn
-# import asyncio
-# import requests
-# from fastapi import BackgroundTasks
-# from datetime import datetime
-# from asyncio import sleep
+import boto3
+import json
+import aiobotocore
 
 app = FastAPI()
 
 
-async def fetch(session, url):
-    async with session.get(url) as response:
-        return await response.text()
+@app.get('/async')
+async def index_async():
+    print('receive requests')
+    try:
+        session = aiobotocore.get_session()
+        async with session.create_client('sagemaker-runtime') as client:
+            sagemaker_response = await client.invoke_endpoint(
+                EndpointName='sagemaker-endpoint-test',
+                Accept='application/json',
+                ContentType='application/json',
+                Body=json.dumps({'message': 'test'}))
+            response_body = sagemaker_response['Body']
+            async with response_body as stream:
+                data = await stream.read()
+                return json.loads(data.decode())
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=500,
+                            detail='Sagemaker invoke endpoint exception')
 
 
 @app.get('/')
 async def index():
     print('receive requests')
 
-    async with aiohttp.ClientSession() as session:
-        html = await fetch(session, 'http://api:3333/sleep')
-        print(html)
+    try:
+        sagemaker = boto3.client('sagemaker-runtime')
+        sagemaker_response = sagemaker.invoke_endpoint(
+            EndpointName='sagemaker-endpoint-test',
+            Accept='application/json',
+            ContentType='application/json',
+            Body=json.dumps({'message': 'test'}))
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=500,
+                            detail='Sagemaker invoke endpoint exception')
 
-    return {"text": "success"}
-
-
-@app.get('/sleep')
-async def sleepapp():
-    sleep(5)
-    return {"text": "finish"}
+    response_body = sagemaker_response['Body']
+    return json.load(response_body)
 
 
 if __name__ == '__main__':
