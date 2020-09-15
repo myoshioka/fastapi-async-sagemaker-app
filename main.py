@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI, HTTPException
 import uvicorn
 import boto3
@@ -5,6 +6,7 @@ import json
 import aiobotocore
 
 app = FastAPI()
+ENDPOINT_NAME = os.environ['ENDPOINT_NAME']
 
 
 @app.get('/async')
@@ -14,7 +16,7 @@ async def index_async():
         session = aiobotocore.get_session()
         async with session.create_client('sagemaker-runtime') as client:
             sagemaker_response = await client.invoke_endpoint(
-                EndpointName='sagemaker-endpoint-test',
+                EndpointName=ENDPOINT_NAME,
                 Accept='application/json',
                 ContentType='application/json',
                 Body=json.dumps({'message': 'test'}))
