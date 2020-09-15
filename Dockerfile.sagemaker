@@ -1,0 +1,18 @@
+FROM python:3.8-slim
+
+WORKDIR /code
+COPY poetry.lock pyproject.toml /code/
+
+# System deps:
+RUN pip install poetry
+
+# Project initialization:
+RUN poetry config virtualenvs.create false \
+&& poetry install
+
+COPY ./sagemaker_endpoint.py /code
+
+EXPOSE 8080
+
+# CMD ["python3","sagemaker_endpoint.py"]
+ENTRYPOINT ["python3", "sagemaker_endpoint.py"]

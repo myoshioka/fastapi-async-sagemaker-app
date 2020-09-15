@@ -4,13 +4,15 @@ services:
     build: ./
     volumes:
       - ./:/code
+      - ./aws/config:/root/.aws/config
+      - ./aws/credentials:/root/.aws/credentials
     ports:
       - 3000:3000
     tty: true
-  api:
-    build: ./
-    volumes:
-      - ./:/code
+  sagemaker:
+    build:
+      context: .
+      dockerfile: Dockerfile.sagemaker
     ports:
-      - 3333:3333
+      - 8080:8080
     tty: true
