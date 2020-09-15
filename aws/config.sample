@@ -1,5 +1,0 @@
-[default]
-region = ap-northeast-1
-output = json
-role_arn = 
-source_profile = dev
