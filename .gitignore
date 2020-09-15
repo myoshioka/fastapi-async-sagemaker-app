@@ -1,2 +1,5 @@
 __pycache__/
 .env
+config
+credentials
+.DS_Store
