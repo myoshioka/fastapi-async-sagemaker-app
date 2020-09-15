@@ -2,10 +2,9 @@ version: '3'
 services:
   app:
     build: ./
+    env_file: .env
     volumes:
       - ./:/code
-      - ./aws/config:/root/.aws/config
-      - ./aws/credentials:/root/.aws/credentials
     ports:
       - 3000:3000
     tty: true
