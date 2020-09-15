@@ -21,7 +21,7 @@ async def main(id):
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
-    # gather = asyncio.gather(main(1), main(2), main(3), main(4), main(5))
-    gather = asyncio.wait([main(1), main(2), main(3), main(4), main(5)])
+    gather = asyncio.gather(main(1), main(2), main(3), main(4), main(5))
+    # gather = asyncio.wait([main(1), main(2), main(3), main(4), main(5)])
 
     loop.run_until_complete(gather)
