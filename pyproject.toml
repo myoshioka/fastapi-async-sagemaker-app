@@ -11,6 +11,8 @@ uvicorn = "^0.11.8"
 pytest = "^6.0.1"
 requests = "^2.24.0"
 aiohttp = "^3.6.2"
+aiobotocore = "^1.1.1"
+boto3 = "^1.14.44"
 
 [tool.poetry.dev-dependencies]
 
