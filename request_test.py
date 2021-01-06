@@ -1,27 +1,23 @@
 import aiohttp
 import asyncio
+from datetime import datetime
 
-# URL = 'http://localhost:3000'
-URL = 'http://localhost:3000/async'
-
-
-async def fetch(session, url):
-    print('call fetch')
-    async with session.get(url) as response:
-        r_text = await response.text()
-        print('finished')
-        return r_text
+URL = 'http://localhost:3000'
 
 
+# URL = 'http://localhost:3000/async'
 async def main(id):
     async with aiohttp.ClientSession() as session:
-        response = await fetch(session, URL)
-        print('count:{count} data:{data}'.format(count=id, data=response))
+        async with session.get(URL) as response:
+            res_text = await response.text()
+            return f"response:{res_text}  id:{id}"
 
 
 if __name__ == '__main__':
+    print(f"{datetime.now():%H:%M:%S} start")
     loop = asyncio.get_event_loop()
-    gather = asyncio.gather(main(1), main(2), main(3), main(4), main(5))
-    # gather = asyncio.wait([main(1), main(2), main(3), main(4), main(5)])
-
-    loop.run_until_complete(gather)
+    gather = asyncio.gather(main(1), main(2), main(3), main(4))
+    results = loop.run_until_complete(gather)
+    for r in results:
+        print(f"result: {r}")
+    print(f"{datetime.now():%H:%M:%S} end")
