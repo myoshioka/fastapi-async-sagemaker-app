@@ -37,7 +37,7 @@ async def index():
     try:
         sagemaker = boto3.client('sagemaker-runtime')
         sagemaker_response = sagemaker.invoke_endpoint(
-            EndpointName='sagemaker-endpoint-test',
+            EndpointName=ENDPOINT_NAME,
             Accept='application/json',
             ContentType='application/json',
             Body=json.dumps({'message': 'test'}))
