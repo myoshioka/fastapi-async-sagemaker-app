@@ -4,6 +4,7 @@ import uvicorn
 import boto3
 import json
 import aiobotocore
+from datetime import datetime
 
 app = FastAPI()
 ENDPOINT_NAME = os.environ['ENDPOINT_NAME']
@@ -20,6 +21,7 @@ async def index_async():
                 Accept='application/json',
                 ContentType='application/json',
                 Body=json.dumps({'message': 'test'}))
+            print(f"{datetime.now():%H:%M:%S} get response")
             response_body = sagemaker_response['Body']
             async with response_body as stream:
                 data = await stream.read()
@@ -41,6 +43,7 @@ async def index():
             Accept='application/json',
             ContentType='application/json',
             Body=json.dumps({'message': 'test'}))
+        print(f"{datetime.now():%H:%M:%S} get response")
     except Exception as e:
         print(e)
         raise HTTPException(status_code=500,
